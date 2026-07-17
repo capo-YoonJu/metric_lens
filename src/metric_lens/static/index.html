@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MetricLens — 지표 정의 에이전트</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">ML</span>
+      <div>
+        <h1>MetricLens</h1>
+        <p>금융 지표 정의 표준화 &amp; 충돌 탐지 에이전트</p>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="register">지표 등록</button>
+      <button class="tab-btn" data-tab="review">HITL 검토 <span class="pill" id="review-count" hidden>0</span></button>
+      <button class="tab-btn" data-tab="history">실행 내역</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===================== 지표 등록 ===================== -->
+    <section id="panel-register" class="panel active">
+      <div class="grid-2">
+        <form id="ingest-form" class="card">
+          <h2>새 지표 등록</h2>
+          <label>
+            부서
+            <input type="text" id="f-department" placeholder="예: 리스크관리부" required />
+          </label>
+          <label>
+            입력 형식
+            <select id="f-source-type">
+              <option value="natural_language">자연어</option>
+              <option value="sql">SQL</option>
+              <option value="excel">Excel</option>
+            </select>
+          </label>
+          <label>
+            지표 정의 내용
+            <textarea id="f-content" rows="8" placeholder="예: 연체율 = 연체채권 / 총여신, 월 단위로 집계" required></textarea>
+          </label>
+          <button type="submit" id="ingest-submit">등록 &amp; 충돌 탐지 실행</button>
+          <p class="hint">등록하면 그래프가 <code>ingest → normalize → store → conflict_detect</code> 순서로 실행되고, 충돌이 발견되면 HITL 검토 탭에서 결정을 기다립니다.</p>
+        </form>
+
+        <div class="card">
+          <h2>등록 결과</h2>
+          <div id="ingest-result" class="result-box empty">아직 등록한 지표가 없습니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>등록된 지표 레지스트리</h2>
+          <button class="ghost-btn" id="refresh-metrics">새로고침</button>
+        </div>
+        <div id="metrics-list" class="table-wrap">
+          <p class="muted">불러오는 중...</p>
+        </div>
+        <p class="hint">같은 지표를 부서마다 다르게 등록해도 모든 정의가 그대로 보존됩니다. HITL 검토에서 A/B 채택·병합을 결정하면 해당 정의 하나에만 <span class="badge badge-standard">표준</span> 배지가 붙고, 이후 신규 등록은 그 표준하고만 비교됩니다. '보류'를 선택하면 이번에 비교된 정의들이 모두 표준으로 추가되어 <span class="badge badge-standard">표준</span> 배지가 여러 개 붙을 수 있습니다 — 나머지(표준이 아닌) 부서 정의는 이력 보존을 위해 그대로 남아있습니다.</p>
+      </div>
+    </section>
+
+    <!-- ===================== HITL 검토 ===================== -->
+    <section id="panel-review" class="panel">
+      <div class="card-header">
+        <h2>대기 중인 충돌 검토</h2>
+        <button class="ghost-btn" id="refresh-review">새로고침</button>
+      </div>
+      <div id="review-list" class="stack"></div>
+    </section>
+
+    <!-- ===================== 실행 내역 ===================== -->
+    <section id="panel-history" class="panel">
+      <div class="grid-history">
+        <div class="card">
+          <div class="card-header">
+            <h2>실행 내역 (thread별)</h2>
+            <button class="ghost-btn" id="refresh-history">새로고침</button>
+          </div>
+          <div id="history-list" class="table-wrap"></div>
+        </div>
+        <div class="card">
+          <h2>워크플로우 타임라인</h2>
+          <div id="history-detail" class="result-box empty">왼쪽 목록에서 실행을 선택하세요.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
