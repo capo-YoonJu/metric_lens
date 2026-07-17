@@ -14,9 +14,9 @@
 ## 🔀 아키텍처: LangGraph 흐름
 
 ```
-ingest → normalize → store → conflict_detect ─[충돌 없음]───────────────┐
-                                    │                                    │
-                              [충돌 있음]                                │
+ingest → normalize → store → conflict_detect ────────────────────────────┐
+                                    │                               [충돌 없음]
+                              [충돌 있음]                                  │
                                     ▼                                    ▼
                                 recommend → human_review*(interrupt) → resolve → report → END
 ```
@@ -90,7 +90,7 @@ cp .env.example .env
 # .env에 OPENAI_API_KEY, (선택) LANGFUSE_* 값 채우기
 
 # 서버 실행
-uvicorn metric_lens.main:app --reload
+uvicorn metric_lens.main:app --reload --port 8000 --app-dir src
 ```
 
 `http://localhost:8000/` 에서 정적 테스트 UI로 지표 등록·충돌 검토 흐름을 바로 확인할 수 있습니다.

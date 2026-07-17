@@ -7,3 +7,7 @@ checkpoints.db*
 metric_lens.db*
 .claude
 CLAUDE.md
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
