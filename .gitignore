@@ -1,0 +1,10 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+chroma_db/
+checkpoints.db*
+metric_lens.db*
+.claude
+CLAUDE.md
+CONTEXT.md
